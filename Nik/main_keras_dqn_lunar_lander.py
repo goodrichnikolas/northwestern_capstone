@@ -7,17 +7,18 @@ import pandas as pd
 
 
 def save_information(filename, x, scores, eps_history):
-    df = pd.DataFrame({'x': x, 'scores': scores, 'eps_history': eps_history})
-    df.to_csv(filename)
+    df = pd.DataFrame({'number_of_games': x, 'scores': scores, 'eps_history': eps_history})
+    
+    df.to_csv(filename, index=False)
 
 if __name__ == '__main__':
     env = gym.make('LunarLander-v2')
     lr = 0.0005
-    n_games = 5
-    agent = Agent(gamma=0.99, epsilon=0.0, alpha=lr, input_dims=8,
+    n_games = 100
+    agent = Agent(gamma=0.99, epsilon=1.0, alpha=lr, input_dims=8,
                   n_actions=4, mem_size=1000000, batch_size=64, epsilon_end=0.0)
 
-    #agent.load_model()
+    agent.load_model()
     scores = []
     eps_history = []
 
@@ -36,6 +37,7 @@ if __name__ == '__main__':
             observation = observation_
             agent.learn()
 
+        #This describes the epsilon decay
         eps_history.append(agent.epsilon)
         scores.append(score)
 
