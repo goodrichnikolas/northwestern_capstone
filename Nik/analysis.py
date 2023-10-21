@@ -1,18 +1,25 @@
 import matplotlib.pyplot as plt
 import numpy as np
 import  pandas as pd
+import os
+import glob
 
-df_0 = pd.read_csv('./Nik/lunarlander_eps_0.0.csv')
-df_1 = pd.read_csv('./Nik/lunarlander.csv')
+#Get all csvs from the csv_output folder
+path = r'./Nik/csv_output'
+csvs = glob.glob(os.path.join(path, "*.csv"))
 
-#compare the scores
-plt.figure()
-plt.plot(df_0['scores'], label='eps=0.0')
-plt.plot(df_1['scores'], label='eps=1.0')
-#x axis
-plt.xlabel('Number of games')
-#y axis
+#Select most recent csv
+csv = max(csvs, key=os.path.getctime)
+
+#Read csv
+df = pd.read_csv(csv)
+
+#Create chart
+plt.plot(df['number_of_games'], df['scores'])
+plt.title('Lunar Lander')
+plt.xlabel('Number of Games')
 plt.ylabel('Scores')
-plt.legend()
-plt.savefig('./Nik/scores.png')
+plt.show()
 
+#Save chart
+plt.savefig('lunarlander.png')

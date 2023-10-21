@@ -19,7 +19,7 @@ if __name__ == '__main__':
     agent = Agent(gamma=0.99, epsilon=1.0, alpha=lr, input_dims=8,
                   n_actions=4, mem_size=1000000, batch_size=64, epsilon_end=0.0)
 
-    #agent.load_model()
+    agent.load_model()
     scores = []
     eps_history = []
 
@@ -52,7 +52,7 @@ if __name__ == '__main__':
             #get count of i of current iteration
             x = [i+1 for i in range(i+1)]
             
-            save_information(f'lunarlander_eps_{agent.epsilon}.csv', x, scores, eps_history)
+            save_information(f'lunarlander_eps_{agent.epsilon}_1.csv', x, scores, eps_history)
         
 
     filename = 'lunarlander.png'
