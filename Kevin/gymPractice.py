@@ -17,3 +17,5 @@ for _ in range(1000):
 
 
 env.close()
+
+print('Done')
