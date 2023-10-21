@@ -1,0 +1,7 @@
+# libraries etc
+*.dll
+*.exe
+
+# gvim mess
+*.un~
+*~
