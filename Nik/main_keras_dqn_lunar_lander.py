@@ -9,16 +9,17 @@ import pandas as pd
 def save_information(filename, x, scores, eps_history):
     df = pd.DataFrame({'number_of_games': x, 'scores': scores, 'eps_history': eps_history})
     
-    df.to_csv(filename, index=False)
+    df.to_csv('./csv_output/' + filename, index=False)
+    
 
 if __name__ == '__main__':
     env = gym.make('LunarLander-v2')
     lr = 0.0005
-    n_games = 100
+    n_games = 1000
     agent = Agent(gamma=0.99, epsilon=1.0, alpha=lr, input_dims=8,
                   n_actions=4, mem_size=1000000, batch_size=64, epsilon_end=0.0)
 
-    agent.load_model()
+    #agent.load_model()
     scores = []
     eps_history = []
 
@@ -45,11 +46,14 @@ if __name__ == '__main__':
         print('episode: ', i,'score: %.2f' % score,
               ' average score %.2f' % avg_score)
 
-        if i % 10 == 0 and i > 0:
+        if i % 5 == 0 and i > 0:
             agent.save_model()
             
-        #Save information
-    save_information('lunarlander.csv', [i+1 for i in range(n_games)], scores, eps_history)
+            #get count of i of current iteration
+            x = [i+1 for i in range(i+1)]
+            
+            save_information(f'lunarlander_eps_{agent.epsilon}.csv', x, scores, eps_history)
+        
 
     filename = 'lunarlander.png'
 
