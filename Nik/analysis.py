@@ -17,7 +17,7 @@ df = pd.read_csv(csv)
 #Create chart
 plt.plot(df['number_of_games'], df['scores'])
 plt.title('Lunar Lander')
-plt.xlabel('Number of Games')
+plt.xlabel('Nummber of Games')
 plt.ylabel('Scores')
 plt.show()
 
