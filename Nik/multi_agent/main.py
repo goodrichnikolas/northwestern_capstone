@@ -1,6 +1,7 @@
 from pettingzoo.sisl import waterworld_v4
 
-
+def completion_percentage(current_count, max_count):
+    return round((current_count / max_count) * 100)
 
 n_pursuers = 2
 n_evaders = 2
@@ -22,6 +23,7 @@ thrust_penalty = -0.01
 local_ratio = 0.5
 speed_features = False
 max_cycles = 1000
+current_count = 0
 
 env = waterworld_v4.env(n_pursuers=n_pursuers, n_evaders=n_evaders, n_poisons=n_poisons,
                         n_coop=n_coop, n_sensors=n_sensors, sensor_range=sensor_range,
@@ -42,6 +44,11 @@ for agent in env.agent_iter():
         action = env.action_space(agent).sample() # this is where you would insert your policy
 
     env.step(action)
-    #Print current cycle
+    
+    #Add to count
+    if agent == 'pursuer_0':
+        current_count += 1
+        #Print percentage complete
+        print(f'{completion_percentage(current_count, max_cycles)}%')
     
 env.close()
