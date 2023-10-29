@@ -1,0 +1,121 @@
+2023-10-29 13:25:00.926789: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-10-29 13:25:00.948117: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2023-10-29 13:25:00.948294: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2023-10-29 13:25:00.948438: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2023-10-29 13:25:00.953396: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-10-29 13:25:01.447619: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+Starting training on waterworld_v4.
+Using cuda device
+------------------------------
+| time/              |       |
+|    fps             | 2251  |
+|    iterations      | 1     |
+|    time_elapsed    | 14    |
+|    total_timesteps | 32768 |
+------------------------------
+------------------------------------------
+| time/                   |              |
+|    fps                  | 1885         |
+|    iterations           | 2            |
+|    time_elapsed         | 34           |
+|    total_timesteps      | 65536        |
+| train/                  |              |
+|    approx_kl            | 0.0059980964 |
+|    clip_fraction        | 0.0339       |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -2.8         |
+|    explained_variance   | -0.00257     |
+|    learning_rate        | 0.001        |
+|    loss                 | 4.74         |
+|    n_updates            | 10           |
+|    policy_gradient_loss | -0.00051     |
+|    std                  | 0.984        |
+|    value_loss           | 10.6         |
+------------------------------------------
+------------------------------------------
+| time/                   |              |
+|    fps                  | 1771         |
+|    iterations           | 3            |
+|    time_elapsed         | 55           |
+|    total_timesteps      | 98304        |
+| train/                  |              |
+|    approx_kl            | 0.0062063364 |
+|    clip_fraction        | 0.0521       |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -2.75        |
+|    explained_variance   | 0.314        |
+|    learning_rate        | 0.001        |
+|    loss                 | 5.69         |
+|    n_updates            | 20           |
+|    policy_gradient_loss | -0.00115     |
+|    std                  | 0.952        |
+|    value_loss           | 11.5         |
+------------------------------------------
+------------------------------------------
+| time/                   |              |
+|    fps                  | 1714         |
+|    iterations           | 4            |
+|    time_elapsed         | 76           |
+|    total_timesteps      | 131072       |
+| train/                  |              |
+|    approx_kl            | 0.0044994615 |
+|    clip_fraction        | 0.0461       |
+|    clip_range           | 0.2          |
+|    entropy_loss         | -2.71        |
+|    explained_variance   | 0.375        |
+|    learning_rate        | 0.001        |
+|    loss                 | 8.64         |
+|    n_updates            | 30           |
+|    policy_gradient_loss | -0.000646    |
+|    std                  | 0.941        |
+|    value_loss           | 14.4         |
+------------------------------------------
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 1700        |
+|    iterations           | 5           |
+|    time_elapsed         | 96          |
+|    total_timesteps      | 163840      |
+| train/                  |             |
+|    approx_kl            | 0.005892871 |
+|    clip_fraction        | 0.0541      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -2.68       |
+|    explained_variance   | 0.437       |
+|    learning_rate        | 0.001       |
+|    loss                 | 12.4        |
+|    n_updates            | 40          |
+|    policy_gradient_loss | -0.00119    |
+|    std                  | 0.92        |
+|    value_loss           | 18.1        |
+-----------------------------------------
+-----------------------------------------
+| time/                   |             |
+|    fps                  | 1681        |
+|    iterations           | 6           |
+|    time_elapsed         | 116         |
+|    total_timesteps      | 196608      |
+| train/                  |             |
+|    approx_kl            | 0.009756907 |
+|    clip_fraction        | 0.0694      |
+|    clip_range           | 0.2         |
+|    entropy_loss         | -2.64       |
+|    explained_variance   | 0.402       |
+|    learning_rate        | 0.001       |
+|    loss                 | 6.71        |
+|    n_updates            | 50          |
+|    policy_gradient_loss | 0.000583    |
+|    std                  | 0.899       |
+|    value_loss           | 16.8        |
+-----------------------------------------
+Model has been saved.
+Finished training on waterworld_v4.
+
+Starting evaluation on waterworld_v4 (num_games=10, render_mode=None)
+Rewards:  {'pursuer_0': 769.2143543043053, 'pursuer_1': 830.3036350259431}
+Avg reward: 799.7589946651242
+
+Starting evaluation on waterworld_v4 (num_games=2, render_mode=human)
+Rewards:  {'pursuer_0': 16.066100613292647, 'pursuer_1': 203.22250719691053}
+Avg reward: 109.6443039051016

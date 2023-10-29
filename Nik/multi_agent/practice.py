@@ -5,7 +5,7 @@ For more information, see https://stable-baselines3.readthedocs.io/en/master/mod
 Author: Elliot (https://github.com/elliottower)
 """
 from __future__ import annotations
-
+import sys
 import glob
 import os
 import time
@@ -17,9 +17,8 @@ from stable_baselines3.ppo import MlpPolicy
 from pettingzoo.sisl import waterworld_v4
 
 
-def train_butterfly_supersuit(
-    env_fn, steps: int = 10_000, seed: int | None = 0, **env_kwargs
-):
+def train_butterfly_supersuit(env_fn, steps: int = 10_000, seed: int | None = 0, **env_kwargs):
+    
     # Train a single model to play as each agent in a cooperative Parallel environment
     env = env_fn.parallel_env(**env_kwargs)
 
@@ -95,6 +94,8 @@ def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwa
 
 
 if __name__ == "__main__":
+
+
     env_fn = waterworld_v4
     env_kwargs = {}
 
@@ -106,3 +107,6 @@ if __name__ == "__main__":
 
     # Watch 2 games
     eval(env_fn, num_games=2, render_mode="human", **env_kwargs)
+    
+    
+    
