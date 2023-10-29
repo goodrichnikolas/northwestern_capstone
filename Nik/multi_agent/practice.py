@@ -17,6 +17,30 @@ from stable_baselines3.ppo import MlpPolicy
 from pettingzoo.sisl import waterworld_v4
 
 
+#Arguments
+n_pursuers = 2
+n_evaders = 2
+n_poisons = 2
+n_coop = 2
+n_sensors = 10
+sensor_range = 0.2
+radius = 0.05
+obstacle_radius = 0.2
+obstacle_coord = [(0.5, 0.5)]
+pursuer_max_accel = 0.01
+pursuer_speed = 0.05
+evader_speed = 0.05
+poison_speed = 0.05
+poison_reward = -1
+food_reward = 1
+encounter_reward = 0.01
+thrust_penalty = -0.01
+local_ratio = 0.5
+speed_features = False
+max_cycles = 1000
+current_count = 0
+
+
 def train_butterfly_supersuit(env_fn, steps: int = 10_000, seed: int | None = 0, **env_kwargs):
     
     # Train a single model to play as each agent in a cooperative Parallel environment
@@ -97,7 +121,28 @@ if __name__ == "__main__":
 
 
     env_fn = waterworld_v4
-    env_kwargs = {}
+    env_kwargs = {
+        "n_pursuers": n_pursuers,
+        "n_evaders": n_evaders,
+        "n_poisons": n_poisons,
+        "n_coop": n_coop,
+        "n_sensors": n_sensors,
+        "sensor_range": sensor_range,
+        "radius": radius,
+        "obstacle_radius": obstacle_radius,
+        "obstacle_coord": obstacle_coord,
+        "pursuer_max_accel": pursuer_max_accel,
+        "pursuer_speed": pursuer_speed,
+        "evader_speed": evader_speed,
+        "poison_speed": poison_speed,
+        "poison_reward": poison_reward,
+        "food_reward": food_reward,
+        "encounter_reward": encounter_reward,
+        "thrust_penalty": thrust_penalty,
+        "local_ratio": local_ratio,
+        "speed_features": speed_features,
+        "max_cycles": max_cycles,
+    }
 
     # Train a model (takes ~3 minutes on GPU)
     train_butterfly_supersuit(env_fn, steps=196_608, seed=0, **env_kwargs)
@@ -105,8 +150,6 @@ if __name__ == "__main__":
     # Evaluate 10 games (average reward should be positive but can vary significantly)
     eval(env_fn, num_games=10, render_mode=None, **env_kwargs)
 
-    # Watch 2 games
-    eval(env_fn, num_games=2, render_mode="human", **env_kwargs)
     
     
     
