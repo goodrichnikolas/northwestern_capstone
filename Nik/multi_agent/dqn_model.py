@@ -1,8 +1,4 @@
-"""Uses Stable-Baselines3 to train agents to play the Waterworld environment using SuperSuit vector envs.
-
-For more information, see https://stable-baselines3.readthedocs.io/en/master/modules/ppo.html
-
-Author: Elliot (https://github.com/elliottower)
+"""This model needs to be updated with DQN model from Nik/multi_agent/dqn_model.py
 """
 from __future__ import annotations
 import sys
