@@ -1,4 +1,9 @@
-"""This model needs to be updated with DQN model from Nik/multi_agent/dqn_model.py
+"""Uses Stable-Baselines3 to train agents to play the Waterworld environment using SuperSuit vector envs.
+
+This one uses SAC instead of PPO.
+
+You can output this using the bash command:
+python sac_model.py  > output_sac.txt 2>&1
 """
 from __future__ import annotations
 import sys
@@ -7,8 +12,8 @@ import os
 import time
 
 import supersuit as ss
-from stable_baselines3 import DQN
-from stable_baselines3.dqn import MlpPolicy
+from stable_baselines3 import SAC
+from stable_baselines3.sac import MlpPolicy as SACMlpPolicy
 
 from pettingzoo.sisl import waterworld_v4
 
@@ -50,15 +55,13 @@ def train_butterfly_supersuit(env_fn, steps: int = 10_000, seed: int | None = 0,
     env = ss.concat_vec_envs_v1(env, 8, num_cpus=2, base_class="stable_baselines3")
 
     # Note: Waterworld's observation space is discrete (242,) so we use an MLP policy rather than CNN
-    model = DQN(
-     MlpPolicy,
-     env,
-     verbose=3,
-     learning_rate=1e-3,
-     buffer_size=50000,
-     learning_starts=1000,
-     batch_size=256,
- )
+    model = SAC(
+        SACMlpPolicy,
+        env,
+        verbose=3,
+        learning_rate=1e-3,
+        batch_size=256,
+    )
 
     model.learn(total_timesteps=steps)
 
@@ -87,7 +90,7 @@ def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwa
         print("Policy not found.")
         exit(0)
 
-    model = DQN.load(latest_policy)
+    model = SAC.load(latest_policy)
 
     rewards = {agent: 0 for agent in env.possible_agents}
 
