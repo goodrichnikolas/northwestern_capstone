@@ -1,0 +1,27 @@
+2023-10-30 17:39:53.791090: I tensorflow/tsl/cuda/cudart_stub.cc:28] Could not find cuda drivers on your machine, GPU will not be used.
+2023-10-30 17:39:53.811369: E tensorflow/compiler/xla/stream_executor/cuda/cuda_dnn.cc:9342] Unable to register cuDNN factory: Attempting to register factory for plugin cuDNN when one has already been registered
+2023-10-30 17:39:53.811559: E tensorflow/compiler/xla/stream_executor/cuda/cuda_fft.cc:609] Unable to register cuFFT factory: Attempting to register factory for plugin cuFFT when one has already been registered
+2023-10-30 17:39:53.811706: E tensorflow/compiler/xla/stream_executor/cuda/cuda_blas.cc:1518] Unable to register cuBLAS factory: Attempting to register factory for plugin cuBLAS when one has already been registered
+2023-10-30 17:39:53.815855: I tensorflow/core/platform/cpu_feature_guard.cc:182] This TensorFlow binary is optimized to use available CPU instructions in performance-critical operations.
+To enable the following instructions: AVX2 FMA, in other operations, rebuild TensorFlow with the appropriate compiler flags.
+2023-10-30 17:39:54.311223: W tensorflow/compiler/tf2tensorrt/utils/py_utils.cc:38] TF-TRT Warning: Could not find TensorRT
+Starting training on waterworld_v4.
+Using cuda device
+Traceback (most recent call last):
+  File "/mnt/c/Users/Nikolas/Desktop/Capstone/northwestern_capstone/Nik/multi_agent/ddpg_model.py", line 148, in <module>
+    train_butterfly_supersuit(env_fn, steps=196_608, seed=0, **env_kwargs)
+  File "/mnt/c/Users/Nikolas/Desktop/Capstone/northwestern_capstone/Nik/multi_agent/ddpg_model.py", line 65, in train_butterfly_supersuit
+    model.learn(total_timesteps=steps)
+  File "/home/nikolas/miniconda3/envs/capstone/lib/python3.11/site-packages/stable_baselines3/ddpg/ddpg.py", line 123, in learn
+    return super().learn(
+           ^^^^^^^^^^^^^^
+  File "/home/nikolas/miniconda3/envs/capstone/lib/python3.11/site-packages/stable_baselines3/td3/td3.py", line 222, in learn
+    return super().learn(
+           ^^^^^^^^^^^^^^
+  File "/home/nikolas/miniconda3/envs/capstone/lib/python3.11/site-packages/stable_baselines3/common/off_policy_algorithm.py", line 312, in learn
+    rollout = self.collect_rollouts(
+              ^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/nikolas/miniconda3/envs/capstone/lib/python3.11/site-packages/stable_baselines3/common/off_policy_algorithm.py", line 524, in collect_rollouts
+    assert train_freq.unit == TrainFrequencyUnit.STEP, "You must use only one env when doing episodic training."
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: You must use only one env when doing episodic training.
