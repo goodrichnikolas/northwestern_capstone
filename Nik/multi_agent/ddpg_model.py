@@ -13,6 +13,7 @@ import time
 import supersuit as ss
 from stable_baselines3 import DDPG
 from stable_baselines3.ddpg import MlpPolicy as DDPGMlpPolicy
+from supersuit import 
 
 from pettingzoo.sisl import waterworld_v4
 
@@ -44,14 +45,17 @@ current_count = 0
 def train_butterfly_supersuit(env_fn, steps: int = 10_000, seed: int | None = 0, **env_kwargs):
     
     # Train a single model to play as each agent in a cooperative Parallel environment
-    env = env_fn.parallel_env(**env_kwargs)
+    env = env_fn.env(**env_kwargs)
 
     env.reset(seed=seed)
 
     print(f"Starting training on {str(env.metadata['name'])}.")
+    
+    #Wrap PettingZoo env in a SuperSuit env to convert to vectorized env
+    env = 
 
-    env = ss.pettingzoo_env_to_vec_env_v1(env)
-    env = ss.concat_vec_envs_v1(env, 8, num_cpus=2, base_class="stable_baselines3")
+    # env = ss.pettingzoo_env_to_vec_env_v1(env)
+    # env = ss.concat_vec_envs_v1(env, 8, num_cpus=2, base_class="stable_baselines3")
 
     # Note: Waterworld's observation space is discrete (242,) so we use an MLP policy rather than CNN
     model = DDPG(
