@@ -9,6 +9,7 @@ import sys
 import glob
 import os
 import time
+import pandas as pd
 
 import supersuit as ss
 from stable_baselines3 import PPO
@@ -16,6 +17,9 @@ from stable_baselines3.ppo import MlpPolicy as PPOMlpPolicy
 from pettingzoo.test import seed_test, parallel_seed_test, test_save_obs
 
 from pettingzoo.sisl import waterworld_v4
+
+#Unix time
+import time
 
 
 
@@ -92,7 +96,7 @@ def train_butterfly_supersuit(env_fn, steps: int = 10_000, seed: int | None = 0,
     env.close()
 
 
-def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwargs):
+def eval(env_fn, num_games: int = 100, render_mode: str = None, current_count: int | None = None, **env_kwargs):
     # Evaluate a trained agent vs a random agent
     env = env_fn.env(render_mode=render_mode, **env_kwargs)
 
@@ -109,6 +113,8 @@ def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwa
         exit(0)
 
     model = PPO.load(latest_policy)
+    
+    possible_agents = env.possible_agents
 
     rewards = {agent: 0 for agent in env.possible_agents}
 
@@ -129,6 +135,39 @@ def eval(env_fn, num_games: int = 100, render_mode: str | None = None, **env_kwa
 
             env.step(act)
     env.close()
+    
+    #create empty csv file to store rewards using pandas
+    data_dict = {
+        'agent': [],
+        'reward': [],
+        'average_reward': [],
+        'current_count': [],
+    }
+    
+    #populate data_dict with rewards
+    for agent in possible_agents:
+        data_dict['agent'].append(agent)
+        data_dict['reward'].append(rewards[agent])
+        data_dict['average_reward'].append(sum(rewards.values()) / len(rewards.values()))
+        data_dict['current_count'].append(current_count + 100000)
+    
+    #create csv file to store rewards using pandas
+    
+    columns = ['agent', 'reward', 'average_reward']
+    
+    #create csv empty file if it does not exist
+    if not os.path.exists('./Nik/multi_agent/rewards/rewards.csv'):
+        #Create csv with column headers but no data
+        df = pd.DataFrame(columns=columns)
+        df.to_csv('./Nik/multi_agent/rewards/rewards.csv', index=False)
+        
+    #append data to csv file
+    df = pd.read_csv('./Nik/multi_agent/rewards/rewards.csv')
+    new_df = pd.DataFrame(data_dict)
+    
+    #concatenate new_df to df
+    df = pd.concat([df, new_df])
+    df.to_csv('./Nik/multi_agent/rewards/rewards.csv', index=False)
 
     avg_reward = sum(rewards.values()) / len(rewards.values())
     print("Rewards: ", rewards)
@@ -166,11 +205,27 @@ if __name__ == "__main__":
         "speed_features": speed_features,
         "max_cycles": max_cycles,
     }
+    
+    
+    
+    total_steps = 300000    
+    divider = 100000
+    current_count = 0
+    
+    #Run train_butterfly_supersuit for a total of 10 million steps at 100k steps per run, then evaluate each 100k steps and output the average reward
+    
+    for i in range(total_steps//divider):
+        
+        train_butterfly_supersuit(env_fn, steps=divider, seed=0, **env_kwargs)
+        eval(env_fn, num_games=10, render_mode=None, current_count=current_count, **env_kwargs)
+        current_count += divider
+        
+    
 
     # Train a model (takes ~3 minutes on GPU)
-    train_butterfly_supersuit(env_fn, steps=3_500_000, seed=0, **env_kwargs)
+    #train_butterfly_supersuit(env_fn, steps=100000, seed=0, **env_kwargs)
 
     # Evaluate 10 games (average reward should be positive but can vary significantly)
-    eval(env_fn, num_games=10, render_mode=None, **env_kwargs)
+    # eval(env_fn, num_games=10, render_mode=None, **env_kwargs)
 
     
