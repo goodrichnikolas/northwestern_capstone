@@ -13,6 +13,7 @@ import time
 import supersuit as ss
 from stable_baselines3 import PPO
 from stable_baselines3.ppo import MlpPolicy as PPOMlpPolicy
+from pettingzoo.test import seed_test, parallel_seed_test, test_save_obs
 
 from pettingzoo.sisl import waterworld_v4
 
@@ -61,6 +62,7 @@ def train_butterfly_supersuit(env_fn, steps: int = 10_000, seed: int | None = 0,
     
     # Train a single model to play as each agent in a cooperative Parallel environment
     env = env_fn.parallel_env(**env_kwargs)
+
 
     env.reset(seed=seed)
 
@@ -139,6 +141,9 @@ if __name__ == "__main__":
 
     env_fn = waterworld_v4
     
+
+    
+    
     env_kwargs = {
         "n_pursuers": n_pursuers,
         "n_evaders": n_evaders,
@@ -163,9 +168,9 @@ if __name__ == "__main__":
     }
 
     # Train a model (takes ~3 minutes on GPU)
-    train_butterfly_supersuit(env_fn, steps=10_000, seed=0, **env_kwargs)
+    train_butterfly_supersuit(env_fn, steps=3_500_000, seed=0, **env_kwargs)
 
     # Evaluate 10 games (average reward should be positive but can vary significantly)
-    eval(env_fn, num_games=10, render_mode="human", **env_kwargs)
+    eval(env_fn, num_games=10, render_mode=None, **env_kwargs)
 
     
