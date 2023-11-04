@@ -12,7 +12,7 @@ import time
 
 import supersuit as ss
 from stable_baselines3 import PPO
-from stable_baselines3.ppo import MlpPolicy
+from stable_baselines3.ppo import MlpPolicy as PPOMlpPolicy
 
 from pettingzoo.sisl import waterworld_v4
 
@@ -21,7 +21,7 @@ from pettingzoo.sisl import waterworld_v4
 n_pursuers = 2
 n_evaders = 2
 n_poisons = 2
-n_coop = 2
+n_coop = 0
 n_sensors = 10
 sensor_range = 0.2
 radius = 0.05
@@ -50,12 +50,13 @@ def train_butterfly_supersuit(env_fn, steps: int = 10_000, seed: int | None = 0,
 
     print(f"Starting training on {str(env.metadata['name'])}.")
 
+    #Do not use vectorized, only run one game at a time
     env = ss.pettingzoo_env_to_vec_env_v1(env)
     env = ss.concat_vec_envs_v1(env, 8, num_cpus=2, base_class="stable_baselines3")
 
     # Note: Waterworld's observation space is discrete (242,) so we use an MLP policy rather than CNN
     model = PPO(
-        MlpPolicy,
+        PPOMlpPolicy,
         env,
         verbose=3,
         learning_rate=1e-3,
@@ -121,6 +122,11 @@ if __name__ == "__main__":
 
 
     env_fn = waterworld_v4
+    
+    
+    #Alter env_fn with a subclass 
+    
+    
     env_kwargs = {
         "n_pursuers": n_pursuers,
         "n_evaders": n_evaders,
