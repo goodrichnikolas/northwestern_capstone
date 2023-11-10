@@ -1,7 +1,8 @@
 import os
 import time
 import csv
-import logging
+import pandas as pd
+from matplotlib import pyplot as plt
 
 import supersuit as ss
 from stable_baselines3 import PPO
@@ -70,7 +71,7 @@ class waterworld_ppo():
         '''
 
         if self.curr_chk is not None:
-            model = PPO.load(os.path.join(self.log_dir, self.curr_chk))
+            model = PPO.load(os.path.join(self.log_dir, self.curr_chk), env=self.env)
         else:
             model = self.model # might be able to just do this, instead of reloading
 
@@ -150,7 +151,7 @@ class waterworld_ppo():
             with open(csv_file,'w') as fid:
                 writer = csv.writer(fid)
                 # assemble the header row -- adjustable number of agents
-                header_row = ['Timestamp','Step Count']
+                header_row = ['Timestamp','StepCount']
                 agent_list = [f'agent_{agent}' for agent in possible_agents]
                 header_row = header_row + agent_list
                 # write to csv
@@ -163,7 +164,12 @@ class waterworld_ppo():
 
 
     def interlace_run(self, num_loops=10):
-        # run a bunch of train and eval loops
+        ''' 
+        run a series of train and eval loops
+        
+        Args:
+            num_loops   :   number of loops to run
+        '''
 
         # start with an eval to see the randomly initialized model
         self.eval()
@@ -173,8 +179,28 @@ class waterworld_ppo():
             self.train()
             self.eval()
 
-x = waterworld_ppo(log_dir='./log_dir', seed=42, n_envs=8)
-x.interlace_run(num_loops=10)
+
+    def plot_rewards(self):
+        '''
+        create a plot of the rewards for the evaluation loops
+        '''
+        
+        csv_log = os.path.join(self.log_dir, self.reward_csv_file)
+        if not os.path.exists(csv_log):
+            print('No data found from evaluation loops. Run eval() or interlace_run()')
+            return -1
+
+        log_pd = pd.read_csv(csv_log) # easier than csv reader
+        fig,ax = plt.subplots()
+        
+        plt.stackplot(log_pd['StepCount'],log_pd[[agent for agent in self.env.possible_agents]])
+        
+
+
+
+if __name__ == '__main__':
+    x = waterworld_ppo(log_dir='./log_dir', seed=42, n_envs=8)
+    x.interlace_run(num_loops=10)
 
 
 
