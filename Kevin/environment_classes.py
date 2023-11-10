@@ -139,9 +139,14 @@ class waterworld_ppo():
         entry = entry + reward_list
 
         csv_file = self.reward_csv_file
+        
+        #Create folder if it doesn't exist
+        if not os.path.exists(self.log_dir):
+            os.makedirs(self.log_dir)
 
         # insert a header row if needed, otherwise just write the current row
         if not os.path.exists(csv_file):
+            
             with open(csv_file,'w') as fid:
                 writer = csv.writer(fid)
                 # assemble the header row -- adjustable number of agents
@@ -167,3 +172,10 @@ class waterworld_ppo():
         for loop in range(num_loops):
             self.train()
             self.eval()
+
+x = waterworld_ppo(log_dir='./log_dir', seed=42, n_envs=8)
+x.interlace_run(num_loops=10)
+
+
+
+print('Done')
