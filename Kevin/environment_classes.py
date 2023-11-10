@@ -55,7 +55,7 @@ class waterworld_ppo():
         self.env = env # environment
         self.model = model # model
         self.log_dir = log_dir # for storing model checkpoints and tensorboard data
-        self.reward_csv_dir = log_dir+'reward_logs.csv' # to store the rewards for a csv
+        self.reward_csv_file = os.path.join(log_dir,'reward_logs.csv') # to store the rewards for a csv
         self.curr_chk = None # current checkpoint file name -- to allow iterative training
         self.train_stepcount = 0 # how many steps have we trained?
 
@@ -135,7 +135,7 @@ class waterworld_ppo():
         # store the reward values
         # order of csv file: timestamp, step_count, rewards for each agent
         entry = [time.strftime('%Y%m%d_%H%M%S'), self.train_stepcount]
-        reward_list = [reward[agent] for agent in possible_agents]
+        reward_list = [rewards[agent] for agent in possible_agents]
         entry = entry + reward_list
 
         csv_file = self.reward_csv_file
