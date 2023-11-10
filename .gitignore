@@ -5,3 +5,7 @@
 # gvim mess
 *.un~
 *~
+
+# log files
+*.csv
+*.txt
