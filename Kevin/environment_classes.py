@@ -3,7 +3,8 @@ import time
 import csv
 import pandas as pd
 from matplotlib import pyplot as plt
-
+import tensorflow as tf
+import glob
 import supersuit as ss
 from stable_baselines3 import PPO
 from stable_baselines3.ppo import MlpPolicy as PPOMlpPolicy
@@ -180,26 +181,106 @@ class waterworld_ppo():
             self.eval()
 
 
-    def plot_rewards(self):
+    def plot_tensorboard_info(self):
         '''
         create a plot of the rewards for the evaluation loops
+        
+        Data information
+        train/policy_gradient_loss
+        train/std
+        train/value_loss
+        time/fps
+        time/fps
+        train/approx_kl
+        train/clip_fraction
+        train/clip_range
+        train/entropy_loss
+        train/explained_variance
+        train/learning_rate
         '''
+        data = {
+        'policy_gradient_loss': [],
+        'std': [],
+        'value_loss': [],
+        'approx_kl': [],
+        'clip_fraction': [],
+        'clip_range': [],
+        'entropy_loss': [],
+        'explained_variance': [],
+        'learning_rate': [],
         
-        csv_log = os.path.join(self.log_dir, self.reward_csv_file)
-        if not os.path.exists(csv_log):
-            print('No data found from evaluation loops. Run eval() or interlace_run()')
-            return -1
+        }
+        #Load all tensorboard files from each folder PPO_1, PPO_2, etc.
+        
+        tensorfiles_list = glob.glob(os.path.join(self.log_dir,'tensorboard_logs','PPO_*','*'))       
+        
+        
+        # Mapping of tags to data keys
+        tag_to_key = {
+            'train/policy_gradient_loss': 'policy_gradient_loss',
+            'train/std': 'std',
+            'train/value_loss': 'value_loss',
+            'train/approx_kl': 'approx_kl',
+            'train/clip_fraction': 'clip_fraction',
+            'train/clip_range': 'clip_range',
+            'train/entropy_loss': 'entropy_loss',
+            'train/explained_variance': 'explained_variance',
+            'train/learning_rate': 'learning_rate'
+        }
 
-        log_pd = pd.read_csv(csv_log) # easier than csv reader
-        fig,ax = plt.subplots()
+        for file in tensorfiles_list:
+            for e in tf.compat.v1.train.summary_iterator(file):
+                for v in e.summary.value:
+                    key = tag_to_key.get(v.tag)
+                    if key:
+                        data[key].append(v.simple_value)                        
         
-        plt.stackplot(log_pd['StepCount'],log_pd[[agent for agent in self.env.possible_agents]])
+        df = pd.DataFrame(data)
+
+        #Plotting
+        fig,ax = plt.subplots()
+        ax.plot(df['policy_gradient_loss'], label='policy_gradient_loss')
+        ax.plot(df['std'], label='std')
+        ax.plot(df['value_loss'], label='value_loss')
+        ax.plot(df['approx_kl'], label='approx_kl')
+        ax.plot(df['clip_fraction'], label='clip_fraction')
+        ax.plot(df['clip_range'], label='clip_range')
+        ax.plot(df['entropy_loss'], label='entropy_loss')
+        ax.plot(df['explained_variance'], label='explained_variance')
+        ax.plot(df['learning_rate'], label='learning_rate')
+        ax.legend()
+        
+        #Save plot in log_dir and create a folder for charts if it doesn't exist
+        if not os.path.exists(os.path.join(self.log_dir,'charts')):
+            os.makedirs(os.path.join(self.log_dir,'charts'))
+        
+        fig.savefig(os.path.join(self.log_dir,'charts','tensorboard_plot.png'))
+        
+        
+    def plot_rewards(self):
+        
+
+        '''
+        Timestamp,StepCount,agent_pursuer_0,agent_pursuer_1
+        create a plot of the rewards for the evaluation loops
+        '''
+        # load the csv file
+        df = pd.read_csv(self.reward_csv_file)
+        
+        for agent in df.columns[2:]:
+            plt.plot(df[agent], label=agent)
+        plt.legend()
+        plt.savefig(os.path.join(self.log_dir,'charts','reward_plot.png'))
+        plt.close()
+
         
 
 
 
 if __name__ == '__main__':
+    
     x = waterworld_ppo(log_dir='./log_dir', seed=42, n_envs=8)
+    x.plot_rewards()
     x.interlace_run(num_loops=10)
 
 
